@@ -1,0 +1,70 @@
+- type: parallel
+  steps:
+    - name: checkrb
+      service: demo
+      command: bundle exec ruby check.rb
+    - name: test
+      service: demo
+      command: bundle exec ruby test.rb
+    # - type: serial
+    #   steps:
+    #   - name: volumes_in
+    #     service: demo
+    #     command: bundle exec ruby write.rb
+    #   - name: volumes_out
+    #     service: demo
+    #     command: bundle exec ruby read.rb
+
+- name: Test
+  type: parallel
+  steps:
+    - name: Test Deployment
+      type: serial
+      service: deployment
+      steps:
+        - name: Check for tooling
+          command: /deploy/test/test_tools_available.sh
+        - name: Tests
+          type: parallel
+          steps:
+          - name: S3, LS
+            command: aws s3 ls s3://codeship_aws_deployment_integration_test
+          - name: S3, CP Archive
+            command: aws s3 cp /deploy/tmp/upload_to_s3.zip s3://codeship_aws_deployment_integration_test
+          - name: S3, CP
+            command: aws s3 cp /deploy/test/upload_to_s3 s3://codeship_aws_deployment_integration_test
+          - name: Elastic Beanstalk
+            command: /deploy/test/elastic_beanstalk/integration-test
+          - name: Code Deploy
+            command: /deploy/test/code_deploy/integration-test
+    - name: Test dockercfg Generator
+      service: dockercfg_test
+      type: push
+      image_name: 870119404647.dkr.ecr.us-east-1.amazonaws.com/codeship-testing
+      registry: https://870119404647.dkr.ecr.us-east-1.amazonaws.com
+      dockercfg_service: dockercfg_test_generator
+- name: Deploy (to Docker Hub)
+  type: serial
+  steps:
+    - name: Push Deployment
+      service: deployment
+      tag: master
+      type: push
+      image_name: codeship/aws-deployment
+      encrypted_dockercfg_path: dockercfg.encrypted
+    - name: Push dockercfg Generator
+      service: dockercfg_generator
+      tag: master
+      type: push
+      image_name: codeship/aws-ecr-dockercfg-generator
+      encrypted_dockercfg_path: dockercfg.encrypted
+
+- type: serial
+  steps:
+    - name: awsecr_push
+      service: demo
+      tag: master
+      type: push
+      image_name: 98437307342.dkr.ecr.us-east-1.amazonaws.com/prabhneet/codeship-eb-docker
+      registry: https://98437307342.dkr.ecr.us-east-1.amazonaws.com
+      dockercfg_service: aws_dockercfg
