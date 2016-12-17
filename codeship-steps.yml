@@ -2,6 +2,7 @@
   steps:
     - name: Build Base Image
       service: base
+      command: true
     - name: checkrb
       service: demo
       command: bundle exec ruby check.rb
