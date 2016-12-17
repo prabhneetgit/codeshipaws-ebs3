@@ -1,3 +1,9 @@
+base:
+  build:
+    image: codeship/aws-base
+    path: ./base
+    dockerfile_path: Dockerfile
+
 demo:
   build:
     image: 98437307342.dkr.ecr.us-east-1.amazonaws.com/prabhneet/codeship-eb-docker
