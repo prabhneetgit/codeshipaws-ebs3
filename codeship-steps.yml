@@ -36,7 +36,7 @@
 #          - name: Code Deploy
 #            command: /deploy/test/code_deploy/integration-test
           - name: Elastic Beanstalk deploy
-            command: codeship_aws eb_deploy /home/ubuntu/ci-guide-master/codeshipaws-ebs3/deploy/codeshipaws-ebs3.zip codeship-eb-docker Test-env s3://elasticbeanstalk-us-east-1-398437307342
+            command: codeship_aws eb_deploy /home/ubuntu/ci-guide-master/codeshipaws-ebs3/deploy codeship-eb-docker Test-env elasticbeanstalk-us-east-1-398437307342
 #    - name: Test dockercfg Generator
 #      service: dockercfg_test
 #      type: push
