@@ -71,13 +71,13 @@
 #      registry: https://870119404647.dkr.ecr.us-east-1.amazonaws.com
 #      dockercfg_service: dockercfg_test_generator
 
-- name: Deploy (to ECS)
-  type: serial
-  steps:
-    - name: awsecr_push
-      service: demo
-      tag: master
-      type: push
-      image_name: 98437307342.dkr.ecr.us-east-1.amazonaws.com/prabhneet/codeship-eb-docker
-      registry: https://98437307342.dkr.ecr.us-east-1.amazonaws.com
-      dockercfg_service: aws_dockercfg
+#- name: Deploy (to ECS)
+#  type: serial
+#  steps:
+#    - name: awsecr_push
+#      service: demo
+#      tag: master
+#      type: push
+#      image_name: 98437307342.dkr.ecr.us-east-1.amazonaws.com/prabhneet/codeship-eb-docker
+#      registry: https://98437307342.dkr.ecr.us-east-1.amazonaws.com
+#      dockercfg_service: aws_dockercfg
