@@ -15,20 +15,44 @@
     #     service: demo
     #     command: bundle exec ruby read.rb
 
-- name: Test Deployment
+- name: Test
   type: parallel
-  service: awsdeployment
-  tag: master
   steps:
-#        - name: Check for tooling
-#          command: /deploy/test/test_tools_available.sh
+    - name: Test Deployment
+      type: serial
+      service: awsdeployment
+      tag: master
+      steps:
+        - name: Check for tooling
+          command: /deploy/test/test_tools_available.sh
         - name: Tests
           type: parallel
           steps:
+          - name: S3, LS
+            command: aws s3 ls s3://elasticbeanstalk-us-east-1-398437307342
+#          - name: S3, CP Archive
+#            command: aws s3 cp /deploy/tmp/upload_to_s3.zip s3://elasticbeanstalk-us-east-1-398437307342
+          - name: S3, CP
+            command: aws s3 cp /deploy/test/upload_to_s3 s3://elasticbeanstalk-us-east-1-398437307342
+#          - name: Elastic Beanstalk
+#            command: /deploy/test/elastic_beanstalk/integration-test
+#          - name: Code Deploy
+#            command: /deploy/test/code_deploy/integration-test
+
+#- name: Test Deployment
+#  type: parallel
+#  service: awsdeployment
+#  tag: master
+#  steps:
+#        - name: Check for tooling
+#          command: /deploy/test/test_tools_available.sh
+#        - name: Tests
+#          type: parallel
+#          steps:
 #          - name: S3, LS
 #            command: aws s3 ls s3://codeship_aws_deployment_integration_test
-           - name: S3, CP Archive
-             command: aws s3 cp /deploy/codeshipaws-ebs3.zip s3://elasticbeanstalk-us-east-1-398437307342
+#          - name: S3, CP Archive
+#            command: aws s3 cp /deploy/tmp/upload_to_s3.zip s3://codeship_aws_deployment_integration_test
 #          - name: S3, CP
 #            command: aws s3 cp /deploy/test/upload_to_s3 s3://codeship_aws_deployment_integration_test
 #          - name: Elastic Beanstalk
@@ -36,7 +60,7 @@
 #          - name: Code Deploy
 #            command: /deploy/test/code_deploy/integration-test
 #          - name: Elastic Beanstalk deploy
-#            command: codeship_aws eb_deploy /home/ubuntu/ci-guide-master/codeshipaws-ebs3/deploy/codeshipaws-ebs3.zip codeship-eb-docker Test-env elasticbeanstalk-us-east-1-398437307342
+#            command: codeship_aws eb_deploy /home/ubuntu/ci-guide-master/codeshipaws-ebs3/deploy codeship-eb-docker Test-env elasticbeanstalk-us-east-1-398437307342
 #    - name: Test dockercfg Generator
 #      service: dockercfg_test
 #      type: push
