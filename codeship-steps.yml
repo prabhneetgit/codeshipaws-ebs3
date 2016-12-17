@@ -1,5 +1,7 @@
 - type: parallel
   steps:
+    - name: Build Base Image
+      service: base
     - name: checkrb
       service: demo
       command: bundle exec ruby check.rb
@@ -15,9 +17,6 @@
     #     service: demo
     #     command: bundle exec ruby read.rb
 
-- name: Build Base Image
-  service: base
-	
 - name: Test
   type: parallel
   steps:
