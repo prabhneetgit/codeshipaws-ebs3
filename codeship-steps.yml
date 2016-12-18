@@ -1,18 +1,22 @@
+- name: Build Base Image
+  service: base
+  command: true
+
 - type: parallel
   steps:
-    - name: Build Base Image
-      service: base
-      command: true
     - name: checkrb
       service: demo
       command: bundle exec ruby check.rb
     - name: test
       service: demo
       command: bundle exec ruby test.rb
+
+- name: Test
+  type: parallel
+  steps:
     - name: Test Deployment
       type: serial
       service: awsdeployment
-      tag: master
       steps:
         - name: Check for tooling
           command: /deploy/test/test_tools_available.sh
@@ -22,13 +26,13 @@
           - name: S3, LS
             command: aws s3 ls s3://codeshipci-aws
 #          - name: S3, CP Archive
-#            command: aws s3 cp /deploy/tmp/upload_to_s3.zip s3://elasticbeanstalk-us-east-1-398437307342
+#            command: aws s3 cp /deploy/tmp/upload_to_s3.zip s3://codeshipci-aws
           - name: S3, CP
             command: aws s3 cp /deploy/test/upload_to_s3 s3://codeshipci-aws
 #          - name: Elastic Beanstalk
 #            command: /deploy/test/elastic_beanstalk/integration-test
 #          - name: Code Deploy
-#            command: /deploy/test/code_deploy/integration-test
+#            command: /deploy/test/code_deploy/integration-test	  
 
     # - type: serial
     #   steps:
