@@ -2,14 +2,14 @@
   service: base
   command: true
 
-- type: parallel
-  steps:
-    - name: checkrb
-      service: demo
-      command: bundle exec ruby check.rb
-    - name: test
-      service: demo
-      command: bundle exec ruby test.rb
+#- type: parallel
+#  steps:
+#    - name: checkrb
+#      service: demo
+#      command: bundle exec ruby check.rb
+#    - name: test
+#      service: demo
+#      command: bundle exec ruby test.rb
 
 - name: Test
   type: parallel
